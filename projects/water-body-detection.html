@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Water Body Detection | Gyanasai Adusumilli</title>
+<meta name="description" content="Case study: mapping surface water from Sentinel-2 and Landsat-8 imagery, comparing index thresholds, five classical models and a U-Net CNN.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Water Body Detection | Gyanasai Adusumilli">
+<meta property="og:description" content="Case study: mapping surface water from Sentinel-2 and Landsat-8 imagery, comparing index thresholds, five classical models and a U-Net CNN.">
+<meta property="og:image" content="https://gyanasaiadusumilli.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #07111A; --panel: #0D1B26; --panel-2: #12242F; --fg: #E7F0F2; --muted: #8A9FA9;
+  --line: #1D3240; --water: #5ED3DF; --land: #D8B26C;
+  --display: "Unbounded", "Avenir Next", system-ui, sans-serif;
+  --body: "Geist", "Segoe UI", system-ui, sans-serif;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #EDF2F3; --panel: #FFFFFF; --panel-2: #E3ECEE; --fg: #0E1E28; --muted: #546A74;
+    --line: #CFDCDF; --water: #08808D; --land: #9C7228; color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #EDF2F3; --panel: #FFFFFF; --panel-2: #E3ECEE; --fg: #0E1E28; --muted: #546A74;
+  --line: #CFDCDF; --water: #08808D; --land: #9C7228; color-scheme: light;
+}
+* { box-sizing: border-box; }
+img { max-width: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17.5px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--water); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 32px); }
+.top { padding-block: 22px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.top a { text-decoration: none; color: var(--muted); font-size: 15px; }
+.top a:hover { color: var(--fg); }
+.top .brand { font-family: var(--display); font-weight: 800; color: var(--fg); font-size: 18px; }
+header.case { padding-block: 48px 36px; border-bottom: 1px solid var(--line); }
+.kind { font-family: var(--mono); font-size: 13px; color: var(--water); margin: 0 0 14px; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(34px, 6vw, 56px); line-height: 1.02; letter-spacing: -0.035em; margin: 0 0 18px; text-wrap: balance; }
+.lede { font-size: clamp(18px, 2vw, 21px); color: var(--muted); margin: 0 0 28px; }
+.meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px 28px; margin: 0 0 28px; }
+.meta div { min-width: 0; }
+.meta dt { font-size: 13px; color: var(--muted); margin-bottom: 2px; }
+.meta dd { margin: 0; font-size: 15.5px; }
+.links { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; border: 1px solid var(--line); background: var(--panel); }
+.btn.primary { background: var(--water); color: var(--bg); border-color: var(--water); }
+.btn svg { width: 15px; height: 15px; }
+section { padding-block: 44px 8px; }
+h2 { font-family: var(--display); font-weight: 600; font-size: clamp(22px, 3vw, 28px); letter-spacing: -0.02em; margin: 0 0 16px; line-height: 1.2; }
+h3 { font-size: 18px; margin: 28px 0 6px; }
+p { margin: 0 0 16px; }
+ul { padding-left: 20px; margin: 0 0 16px; }
+li { margin-bottom: 6px; }
+.tbl { overflow-x: auto; margin: 8px 0 20px; border: 1px solid var(--line); border-radius: 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 500; font-size: 13.5px; background: var(--panel); }
+tr:last-child td { border-bottom: 0; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+code { font-family: var(--mono); font-size: .88em; background: var(--panel-2); padding: 2px 6px; border-radius: 6px; }
+.flow { list-style: none; padding: 0; margin: 12px 0 24px; display: grid; gap: 0; counter-reset: step; }
+.flow li { position: relative; padding: 0 0 22px 46px; margin: 0; counter-increment: step; }
+.flow li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%; background: var(--panel-2); border: 1px solid var(--water); color: var(--water); font: 600 14px/28px var(--mono); text-align: center; }
+.flow li::after { content: ""; position: absolute; left: 15px; top: 34px; bottom: 4px; width: 1px; background: var(--line); }
+.flow li:last-child::after { display: none; }
+.flow b { display: block; }
+.flow span { color: var(--muted); font-size: 15.5px; }
+.decision { border-left: 3px solid var(--water); padding: 2px 0 2px 18px; margin: 0 0 26px; }
+.decision h3 { margin-top: 0; }
+.decision p:last-child { margin-bottom: 0; }
+.note { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; color: var(--muted); font-size: 15.5px; }
+footer { margin-top: 56px; border-top: 1px solid var(--line); padding-block: 26px 48px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 15px; color: var(--muted); }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--fg); }
+</style>
+<script>try { var t = localStorage.getItem('ga-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+<div class="wrap">
+<nav class="top" aria-label="Site"><a class="brand" href="../index.html">GA</a><a href="../index.html#work">All projects</a></nav>
+<header class="case">
+<p class="kind">Remote sensing case study</p>
+<h1>Water Body Detection</h1>
+<p class="lede">Mapping surface water pixel by pixel from Sentinel-2 and Landsat-8 imagery, and testing whether a CNN that sees spatial context beats classical models that look at one pixel at a time.</p>
+<dl class="meta">
+<div><dt>Project</dt><dd>Undergraduate project, rebuilt and extended in 2026</dd></div>
+<div><dt>Data</dt><dd>Sentinel-2 (10 m), Landsat-8 (30 m), JRC Global Surface Water</dd></div>
+<div><dt>Stack</dt><dd>PyTorch, scikit-learn, Google Earth Engine, Rasterio</dd></div>
+</dl>
+<div class="links">
+<a class="btn primary" href="https://github.com/gyanasaiadusumilli/water-body-detection" target="_blank" rel="noopener">Code on GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+<a class="btn" href="https://colab.research.google.com/github/gyanasaiadusumilli/water-body-detection/blob/main/notebooks/train_on_colab.ipynb" target="_blank" rel="noopener">Run it in Colab <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+</div>
+</header>
+
+<section>
+<h2>The problem</h2>
+<p>Knowing where surface water is, and how it changes, matters for water supply planning, flood response and drought monitoring. Satellites photograph the whole planet every few days, so the question is how to turn those images into reliable water maps.</p>
+<p>The classic approach is a spectral index. Water reflects green light but absorbs near-infrared, so the Normalized Difference Water Index, NDWI = (Green − NIR) / (Green + NIR), is high over water. A single threshold on NDWI works on clear lakes but struggles with building shadows, dark rooftops, wet soil and muddy water.</p>
+<p>I wanted to find out how much learned models improve on that threshold, and whether a convolutional network, which sees the shape and surroundings of each pixel, does better than classical models that only see one pixel's numbers.</p>
+</section>
+
+<section>
+<h2>The data</h2>
+<p>I built the dataset with Google Earth Engine. For each study area and month, the pipeline takes every satellite image, removes clouds and cloud shadows using each sensor's quality bands, and combines the clear pixels into one median composite. Both sensors are mapped to the same six bands: blue, green, red, near-infrared and two shortwave-infrared bands.</p>
+<p>Labels come from the JRC Global Surface Water monthly history, using the <b>same month</b> as the imagery so the label and the image describe the same moment. Pixels that were cloudy in the imagery are marked "ignore" rather than guessed.</p>
+<p>I picked eight areas with different kinds of water, in their dry season to limit clouds:</p>
+<div class="tbl"><table>
+<thead><tr><th>Area</th><th>Water type</th><th>Month</th></tr></thead>
+<tbody>
+<tr><td>Hyderabad, India</td><td>City lakes and reservoirs</td><td class="num">Feb 2021</td></tr>
+<tr><td>Kolleru Lake, India</td><td>Shallow lake surrounded by aquaculture ponds</td><td class="num">Feb 2021</td></tr>
+<tr><td>Chilika Lake, India</td><td>Coastal lagoon</td><td class="num">Feb 2021</td></tr>
+<tr><td>Varanasi, India</td><td>Ganges river and floodplain</td><td class="num">Mar 2021</td></tr>
+<tr><td>Lake Okeechobee, USA</td><td>Large lake and wetlands</td><td class="num">Mar 2021</td></tr>
+<tr><td>IJsselmeer, Netherlands</td><td>Lake, polders and canals</td><td class="num">Apr 2021</td></tr>
+<tr><td>Hudson Valley, USA</td><td>River and reservoirs</td><td class="num">Sep 2021</td></tr>
+<tr><td>Lake Victoria, Uganda</td><td>Lake shoreline near Kampala</td><td class="num">Jul 2021</td></tr>
+</tbody></table></div>
+</section>
+
+<section>
+<h2>Approach</h2>
+<ol class="flow">
+<li><b>Download composites</b><span>1024 × 1024 pixel scenes per area and sensor, pulled directly from Earth Engine.</span></li>
+<li><b>Add water indices</b><span>NDWI, MNDWI (which uses shortwave infrared and handles built-up areas better), NDVI for vegetation and AWEI for shadows, giving 10 features per pixel.</span></li>
+<li><b>Tile and split by location</b><span>Scenes are cut into 128 × 128 tiles, grouped into spatial blocks, and whole blocks go to train, validation or test.</span></li>
+<li><b>Train and compare</b><span>Two index baselines, five classical models and a U-Net CNN, for each sensor.</span></li>
+<li><b>Score on the same pixels</b><span>Every model is evaluated on one fixed sample of up to 500,000 test pixels.</span></li>
+</ol>
+<div class="tbl"><table>
+<thead><tr><th>Model</th><th>What it sees</th></tr></thead>
+<tbody>
+<tr><td>NDWI &gt; 0</td><td>One index, fixed threshold</td></tr>
+<tr><td>MNDWI with Otsu threshold</td><td>One index, threshold learned from the data</td></tr>
+<tr><td>Logistic regression, KNN, SVM, random forest, gradient boosting</td><td>All 10 features of a single pixel</td></tr>
+<tr><td>U-Net CNN</td><td>A 128 × 128 neighbourhood: shapes, shorelines and context</td></tr>
+</tbody></table></div>
+</section>
+
+<section>
+<h2>Key decisions</h2>
+<div class="decision">
+<h3>Splitting by location, not at random</h3>
+<p>Neighbouring tiles look almost identical. With a random split, the test set would contain near-copies of training tiles and the scores would look better than they really are. Grouping tiles into spatial blocks and keeping each block in one split makes the test closer to mapping a place the model has not seen.</p>
+</div>
+<div class="decision">
+<h3>Choosing the right metric</h3>
+<p>Most pixels are land. A model that predicts "land" everywhere can still score high accuracy. So I compare models on <b>IoU and F1 for the water class</b>, with Cohen's kappa as a check, and treat accuracy as secondary.</p>
+</div>
+<div class="decision">
+<h3>Keeping the comparison fair</h3>
+<p>SVM and KNN slow down sharply with more data, so they train on smaller samples (20,000 and 50,000 pixels) than the tree models. Every model, including the CNN, is then scored on exactly the same test pixels, so differences come from the models and not from the test data.</p>
+</div>
+<div class="decision">
+<h3>Living with imperfect labels</h3>
+<p>The JRC labels are derived from 30 m Landsat imagery, so they are a strong reference but not hand-drawn ground truth. Narrow rivers and small ponds can be missed, which matters most for the 10 m Sentinel-2 results. Cloud-masked pixels are excluded instead of being counted as land.</p>
+</div>
+</section>
+
+<section>
+<h2>Results</h2>
+<p>Every model was scored on the same 500,000 test pixels per sensor, from locations it never saw in training.</p>
+<img src="../img/water-comparison.png" alt="Bar charts of water IoU for each model on Sentinel-2 and Landsat-8" style="width:100%;border-radius:14px;border:1px solid var(--line);background:#fff;margin:6px 0 18px">
+<div class="tbl"><table>
+<thead><tr><th>Model</th><th>Sentinel-2 IoU</th><th>Landsat-8 IoU</th></tr></thead>
+<tbody>
+<tr><td>NDWI &gt; 0</td><td class="num">0.950</td><td class="num">0.921</td></tr>
+<tr><td>MNDWI (Otsu threshold)</td><td class="num">0.979</td><td class="num">0.957</td></tr>
+<tr><td>Logistic regression</td><td class="num">0.980</td><td class="num">0.977</td></tr>
+<tr><td>KNN</td><td class="num">0.957</td><td class="num">0.975</td></tr>
+<tr><td>SVM (RBF)</td><td class="num">0.981</td><td class="num">0.978</td></tr>
+<tr><td>Random forest</td><td class="num">0.967</td><td class="num">0.976</td></tr>
+<tr><td>Gradient boosting</td><td class="num">0.975</td><td class="num"><b>0.978</b></td></tr>
+<tr><td>U-Net CNN</td><td class="num"><b>0.984</b></td><td class="num">0.973</td></tr>
+</tbody></table></div>
+<h3>On Sentinel-2, the CNN wins</h3>
+<p>The U-Net reached 0.984 water IoU and 99.0% accuracy. Compared with the NDWI threshold, the share of mislabelled water area (1 &minus; IoU) fell from 5.0% to 1.6%, about two-thirds fewer errors. At 10 m, shorelines and small ponds span enough pixels for spatial context to pay off.</p>
+<h3>On Landsat-8, it doesn't</h3>
+<p>Gradient boosting scored 0.978 against the U-Net's 0.973. At 30 m, a 128 &times; 128 tile covers almost 4 km and fine shoreline detail is lost. The JRC labels are themselves produced from Landsat by a per-pixel classifier, so per-pixel models trained on Landsat bands can match them very closely.</p>
+<h3>Thresholds learned from data beat fixed ones</h3>
+<p>Choosing the MNDWI threshold with Otsu's method (0.19 for Sentinel-2, 0.17 for Landsat-8, instead of the usual 0) closed most of the gap to the learned models.</p>
+<img src="../img/water-hyderabad.jpg" alt="True-color Sentinel-2 image of Hyderabad beside the U-Net water mask highlighting Hussain Sagar lake" style="width:100%;border-radius:14px;margin:10px 0 6px">
+<p style="font-size:15px;color:var(--muted)">U-Net water mask over Hyderabad, February 2021. The model outlines Hussain Sagar lake and several small ponds.</p>
+<p style="font-size:15px;color:var(--muted)">These are single runs with one random seed, so differences of about 0.005 IoU between the top models could change with a different split.</p>
+</section>
+
+<section>
+<h2>Next steps</h2>
+<ul>
+<li>Add Sentinel-1 radar, which sees through clouds, so the maps work during the monsoon.</li>
+<li>Hold out entire regions to test how well the models transfer to new parts of the world.</li>
+<li>Hand-label a small validation set to measure how much label noise affects the scores.</li>
+</ul>
+</section>
+<footer><a href="../index.html#work">Back to all projects</a><a href="../index.html#contact">Contact Gyanasai</a></footer>
+</div>
+</body>
+</html>

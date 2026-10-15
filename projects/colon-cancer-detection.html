@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Colon Cancer Detection | Gyanasai Adusumilli</title>
+<meta name="description" content="Case study: classifying H&E stained colon tissue as benign or adenocarcinoma with OpenCV preprocessing and a fine-tuned ResNet-18.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Colon Cancer Detection | Gyanasai Adusumilli">
+<meta property="og:description" content="Case study: classifying H&E stained colon tissue as benign or adenocarcinoma with OpenCV preprocessing and a fine-tuned ResNet-18.">
+<meta property="og:image" content="https://gyanasaiadusumilli.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #07111A; --panel: #0D1B26; --panel-2: #12242F; --fg: #E7F0F2; --muted: #8A9FA9;
+  --line: #1D3240; --water: #5ED3DF; --land: #D8B26C;
+  --display: "Unbounded", "Avenir Next", system-ui, sans-serif;
+  --body: "Geist", "Segoe UI", system-ui, sans-serif;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #EDF2F3; --panel: #FFFFFF; --panel-2: #E3ECEE; --fg: #0E1E28; --muted: #546A74;
+    --line: #CFDCDF; --water: #08808D; --land: #9C7228; color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #EDF2F3; --panel: #FFFFFF; --panel-2: #E3ECEE; --fg: #0E1E28; --muted: #546A74;
+  --line: #CFDCDF; --water: #08808D; --land: #9C7228; color-scheme: light;
+}
+* { box-sizing: border-box; }
+img { max-width: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17.5px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--water); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 32px); }
+.top { padding-block: 22px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.top a { text-decoration: none; color: var(--muted); font-size: 15px; }
+.top a:hover { color: var(--fg); }
+.top .brand { font-family: var(--display); font-weight: 800; color: var(--fg); font-size: 18px; }
+header.case { padding-block: 48px 36px; border-bottom: 1px solid var(--line); }
+.kind { font-family: var(--mono); font-size: 13px; color: var(--water); margin: 0 0 14px; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(34px, 6vw, 56px); line-height: 1.02; letter-spacing: -0.035em; margin: 0 0 18px; text-wrap: balance; }
+.lede { font-size: clamp(18px, 2vw, 21px); color: var(--muted); margin: 0 0 28px; }
+.meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px 28px; margin: 0 0 28px; }
+.meta div { min-width: 0; }
+.meta dt { font-size: 13px; color: var(--muted); margin-bottom: 2px; }
+.meta dd { margin: 0; font-size: 15.5px; }
+.links { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; border: 1px solid var(--line); background: var(--panel); }
+.btn.primary { background: var(--water); color: var(--bg); border-color: var(--water); }
+.btn svg { width: 15px; height: 15px; }
+section { padding-block: 44px 8px; }
+h2 { font-family: var(--display); font-weight: 600; font-size: clamp(22px, 3vw, 28px); letter-spacing: -0.02em; margin: 0 0 16px; line-height: 1.2; }
+h3 { font-size: 18px; margin: 28px 0 6px; }
+p { margin: 0 0 16px; }
+ul { padding-left: 20px; margin: 0 0 16px; }
+li { margin-bottom: 6px; }
+.tbl { overflow-x: auto; margin: 8px 0 20px; border: 1px solid var(--line); border-radius: 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 500; font-size: 13.5px; background: var(--panel); }
+tr:last-child td { border-bottom: 0; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+code { font-family: var(--mono); font-size: .88em; background: var(--panel-2); padding: 2px 6px; border-radius: 6px; }
+.flow { list-style: none; padding: 0; margin: 12px 0 24px; display: grid; gap: 0; counter-reset: step; }
+.flow li { position: relative; padding: 0 0 22px 46px; margin: 0; counter-increment: step; }
+.flow li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%; background: var(--panel-2); border: 1px solid var(--water); color: var(--water); font: 600 14px/28px var(--mono); text-align: center; }
+.flow li::after { content: ""; position: absolute; left: 15px; top: 34px; bottom: 4px; width: 1px; background: var(--line); }
+.flow li:last-child::after { display: none; }
+.flow b { display: block; }
+.flow span { color: var(--muted); font-size: 15.5px; }
+.decision { border-left: 3px solid var(--water); padding: 2px 0 2px 18px; margin: 0 0 26px; }
+.decision h3 { margin-top: 0; }
+.decision p:last-child { margin-bottom: 0; }
+.note { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; color: var(--muted); font-size: 15.5px; }
+footer { margin-top: 56px; border-top: 1px solid var(--line); padding-block: 26px 48px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 15px; color: var(--muted); }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--fg); }
+</style>
+<script>try { var t = localStorage.getItem('ga-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+<div class="wrap">
+<nav class="top" aria-label="Site"><a class="brand" href="../index.html">GA</a><a href="../index.html#work">All projects</a></nav>
+<header class="case">
+<p class="kind">Medical imaging case study</p>
+<h1>Colon Cancer Detection</h1>
+<p class="lede">Classifying colon tissue images as benign or adenocarcinoma with OpenCV contrast enhancement and a fine-tuned ResNet-18, packaged as a web demo anyone can try.</p>
+<dl class="meta">
+<div><dt>Project</dt><dd>Undergraduate project, rebuilt and extended in 2026</dd></div>
+<div><dt>Data</dt><dd>LC25000, colon subset (10,000 images)</dd></div>
+<div><dt>Stack</dt><dd>PyTorch, OpenCV, ResNet-18, Streamlit, Docker</dd></div>
+</dl>
+<div class="links">
+<a class="btn primary" href="https://colon-cancer-detection-4mfynxys2lkiqpzwvwab44.streamlit.app" target="_blank" rel="noopener">Try the live demo <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+<a class="btn" href="https://github.com/gyanasaiadusumilli/colon-cancer-detection" target="_blank" rel="noopener">Code on GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+<a class="btn" href="https://colab.research.google.com/github/gyanasaiadusumilli/colon-cancer-detection/blob/main/notebooks/train_on_colab.ipynb" target="_blank" rel="noopener">Run it in Colab <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+</div>
+</header>
+
+<section>
+<h2>The problem</h2>
+<p>Colorectal cancer is diagnosed by pathologists who examine stained tissue slides under a microscope. The work is slow, and different experts sometimes disagree on borderline cases. A model that flags likely cancer can help a pathologist prioritise which slides to review first.</p>
+<p>The goal of this project is a binary classifier for colon tissue patches: <b>benign</b> or <b>adenocarcinoma</b>, the most common type of colon cancer.</p>
+</section>
+
+<section>
+<h2>The data</h2>
+<p>I used the colon part of the public <a href="https://www.kaggle.com/datasets/andrewmvd/lung-and-colon-cancer-histopathological-images" target="_blank" rel="noopener">LC25000 dataset</a>: 10,000 H&amp;E stained images at 768 × 768 pixels, 5,000 per class. The split is 70% training, 15% validation and 15% test, stratified so each split keeps the 50/50 balance.</p>
+<p>One detail shaped how I read the results: the 10,000 images were created by augmenting 500 original images (250 per class). Augmented copies of the same original can land in both the training and test sets, which makes test scores optimistic. The dataset does not say which images share an original, so this cannot be fully fixed. I report it openly instead of hiding it.</p>
+</section>
+
+<section>
+<h2>Approach</h2>
+<ol class="flow">
+<li><b>Contrast enhancement with OpenCV</b><span>CLAHE on the lightness channel in LAB colour space sharpens nuclei and gland edges without changing the stain colours.</span></li>
+<li><b>Augmentation</b><span>Random flips, 90° rotations and small brightness and contrast changes. Tissue has no natural "up", and staining varies between labs.</span></li>
+<li><b>Transfer learning</b><span>An ImageNet-pretrained ResNet-18 with a new dropout and linear head, fine-tuned end to end with AdamW and a cosine learning-rate schedule.</span></li>
+<li><b>Evaluation</b><span>Accuracy, precision, sensitivity, specificity, F1, ROC-AUC and a confusion matrix on the untouched test set.</span></li>
+<li><b>Deployment</b><span>A Streamlit app in a Docker container on Hugging Face Spaces, with sample images so visitors can try it in one click.</span></li>
+</ol>
+</section>
+
+<section>
+<h2>Key decisions</h2>
+<div class="decision">
+<h3>Reporting sensitivity and specificity, not just accuracy</h3>
+<p>In cancer screening, missing a cancer is worse than a false alarm. Accuracy hides that difference, so the evaluation reports sensitivity (how many cancers are caught) and specificity (how many benign samples are correctly cleared) separately, plus the ROC curve for choosing a different threshold.</p>
+</div>
+<div class="decision">
+<h3>Preprocessing for stain variation</h3>
+<p>H&amp;E slides look different depending on the lab, the scanner and the staining batch. Enhancing contrast only on the lightness channel, together with mild brightness jitter during training, helps the model focus on tissue structure instead of colour shifts. The training script has a <code>--no-clahe</code> switch to measure what CLAHE contributes.</p>
+</div>
+<div class="decision">
+<h3>A model small enough to host for free</h3>
+<p>Free hosting means running on a CPU. ResNet-18 is accurate enough for this task and small enough (about 45 MB) to load and predict in about a second without a GPU, which keeps the live demo responsive.</p>
+</div>
+</section>
+
+<section>
+<h2>Results</h2>
+<p>Trained for 8 epochs on a free Colab T4 GPU, then evaluated once on the 1,500 test images the model never saw during training (750 per class).</p>
+<div class="tbl"><table>
+<thead><tr><th>Metric</th><th>Score</th></tr></thead>
+<tbody>
+<tr><td>Accuracy</td><td class="num">100.0%</td></tr>
+<tr><td>Sensitivity (cancers caught)</td><td class="num">100.0%</td></tr>
+<tr><td>Specificity (benign correctly cleared)</td><td class="num">100.0%</td></tr>
+<tr><td>Precision</td><td class="num">100.0%</td></tr>
+<tr><td>F1</td><td class="num">1.000</td></tr>
+<tr><td>ROC-AUC</td><td class="num">1.000</td></tr>
+</tbody></table></div>
+<h3>Why I don't take 100% at face value</h3>
+<p>Validation accuracy hit 100% after the very first epoch. On a real-world medical task that would be a red flag, and here the cause is the dataset itself: the 10,000 colon images were made by rotating and flipping 500 originals, so copies of the same tissue sample sit in both the training and test sets. The test partly measures recognition of tissue the model has already seen. Published results on LC25000 commonly report 99 to 100% for the same reason.</p>
+<p>A fair estimate needs a split that keeps near-duplicates together, or a test on slides from a different source. Both are on the list below.</p>
+<p>The trained model, its metrics and sample images are published on <a href="https://huggingface.co/Gyana23/colon-cancer-resnet18" target="_blank" rel="noopener">Hugging Face</a>, and the demo loads it from there.</p>
+</section>
+
+<section>
+<h2>Next steps</h2>
+<ul>
+<li>Re-split the data so near-duplicate images stay together, and report the more realistic score.</li>
+<li>Add Grad-CAM heatmaps to the demo, showing which parts of the tissue drove each prediction.</li>
+<li>Test on an external dataset from a different hospital to measure how well the model generalises.</li>
+<li>Tune the decision threshold for high sensitivity, as a screening tool would need.</li>
+</ul>
+</section>
+<footer><a href="../index.html#work">Back to all projects</a><a href="../index.html#contact">Contact Gyanasai</a></footer>
+</div>
+</body>
+</html>
