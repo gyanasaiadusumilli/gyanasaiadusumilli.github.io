@@ -663,7 +663,7 @@ void main(){
       set($('l1'), { x1: a1x, y1: a1y, x2: b1x, y2: b1y }); set($('c1'), { cx: a1x, cy: a1y });
       set($('l2'), { x1: a2x, y1: a2y, x2: b2x, y2: b2y }); set($('c2'), { cx: a2x, cy: a2y });
       Object.assign($('t1').style, { left: b1x - 120 + 'px', top: b1y + 8 + 'px' });
-      Object.assign($('t2').style, { left: Math.min(b2x - 40, w - 300) + 'px', top: b2y - 46 + 'px' });
+      Object.assign($('t2').style, { left: Math.min(b2x - 40, w - 340) + 'px', top: b2y - 46 + 'px' });
     }
     setTimeout(() => { placeHud(); hud.classList.add('on'); }, reduce ? 0 : 3400);
     new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(bh);
