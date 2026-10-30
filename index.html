@@ -107,6 +107,51 @@ a { color: inherit; }
 .bittag { position: absolute; z-index: 1; right: clamp(16px, 4vw, 40px); top: 100px; font-family: var(--mono); font-size: 13px; color: var(--muted); letter-spacing: .04em; }
 .bittag b { color: var(--water); font-weight: 500; font-size: 16px; margin-right: 2px; }
 @media (max-width: 899px) { .bittag { display: none; } }
+.botband { border-top: 1px solid var(--line); overflow: hidden; }
+.botrow { display: flex; align-items: flex-end; justify-content: flex-end; gap: clamp(12px, 3vw, 40px); padding-top: 28px; }
+.bubble { margin: 0 0 clamp(90px, 11vw, 150px); max-width: 26ch; font-size: 16px; line-height: 1.45; background: var(--panel); border: 1px solid var(--line); padding: 14px 18px; border-radius: 20px 20px 4px 20px; color: var(--fg); opacity: 0; transform: translateY(10px); transition: opacity .5s, transform .5s; }
+.bubble.on { opacity: 1; transform: none; }
+.bot { width: clamp(150px, 17vw, 230px); aspect-ratio: 220 / 270; padding: 0; border: 0; background: none; cursor: pointer; flex: none; -webkit-tap-highlight-color: transparent; }
+.bot svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.bot .b-float, .bot .b-arm { transform-box: view-box; }
+.bot .b-head, .bot .b-torso, .bot .b-arm rect { fill: #EEF0F3; stroke: #1C1D20; stroke-opacity: .12; stroke-width: 2; }
+.bot .b-head { fill: #F7F8FA; }
+.bot .b-visor { fill: #121318; }
+.bot .b-eye { fill: var(--water); filter: drop-shadow(0 0 6px var(--water)); }
+.bot .b-joy path { fill: none; stroke: var(--water); stroke-width: 7; stroke-linecap: round; opacity: 0; }
+.bot .b-bits { fill: var(--water); font: 600 26px var(--mono); letter-spacing: 2px; opacity: 0; }
+.bot .b-ear, .bot .b-core, .bot .b-tip { fill: var(--water); }
+.bot .b-tip { filter: drop-shadow(0 0 8px var(--water)); }
+.bot .b-stalk { stroke: #B8BBC2; stroke-width: 5; stroke-linecap: round; }
+.bot .b-glare { fill: #fff; opacity: .16; }
+.bot .b-flame { fill: var(--water); opacity: .45; filter: blur(6px); }
+.bot .b-shadow { fill: #000; opacity: .25; }
+.bot.joy .b-eyes { opacity: 0; } .bot.joy .b-joy path { opacity: 1; }
+.bot.data .b-eyes, .bot.data .b-joy path { opacity: 0; } .bot.data .b-bits { opacity: 1; }
+.bot:focus-visible { outline: 2px solid var(--water); outline-offset: 8px; border-radius: 40px; }
+@media (max-width: 600px) { .bubble { font-size: 14px; margin-bottom: 80px; } }
+.botrow { align-items: flex-end; }
+.nowcard { margin: 0 auto clamp(70px, 9vw, 120px) 0; max-width: 34ch; }
+.nowlabel { font-family: var(--mono); font-size: 12px; color: var(--water); letter-spacing: .06em; }
+.nowcard p { font-size: clamp(18px, 1.7vw, 22px); line-height: 1.4; margin: 8px 0 14px; color: var(--fg); }
+.nowlinks { display: flex; gap: 20px; flex-wrap: wrap; font-size: 15px; }
+.nowlinks a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 3px; }
+.nowlinks a:hover { color: var(--fg); border-color: var(--water); }
+.minibot { position: fixed; z-index: 45; right: clamp(12px, 2vw, 28px); bottom: clamp(12px, 2vw, 24px); display: flex; align-items: flex-end; gap: 8px; pointer-events: none; transform: translateY(140%); transition: transform .6s cubic-bezier(.16,1,.3,1); }
+.minibot.on { transform: none; }
+.minibot .bot.mini { width: 76px; pointer-events: auto; }
+.mbubble { margin: 0 0 54px; max-width: 30ch; font-size: 14px; line-height: 1.45; background: var(--panel); border: 1px solid var(--line); padding: 10px 14px; border-radius: 16px 16px 4px 16px; color: var(--fg); box-shadow: 0 8px 30px rgba(0,0,0,.18); opacity: 0; transform: translateY(8px); transition: opacity .35s, transform .35s; pointer-events: auto; }
+.mbubble.on { opacity: 1; transform: none; }
+.mbubble b { color: var(--water); font-weight: 600; }
+.bot .b-word { fill: var(--water); font: 700 24px var(--mono); letter-spacing: 1px; opacity: 0; }
+.bot.hire .b-eyes, .bot.hire .b-joy path, .bot.hire .b-bits { opacity: 0 !important; } .bot.hire .b-word { opacity: 1; }
+@media (max-width: 760px) {
+  .botrow { flex-wrap: wrap; justify-content: space-between; }
+  .nowcard { flex: 1 1 100%; margin: 0 0 8px; }
+  .bubble { margin-bottom: 70px; max-width: 20ch; font-size: 13.5px; }
+  .bot { width: 130px; }
+  .minibot .bot.mini { width: 58px; } .mbubble { max-width: 22ch; font-size: 13px; margin-bottom: 40px; }
+}
 .sr-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .bigname { margin-top: auto; padding-top: 40px; padding-bottom: clamp(10px, 2.5vh, 28px); overflow: hidden; pointer-events: none; }
 .bigname .bn-row { display: flex; width: max-content; }
@@ -298,6 +343,65 @@ footer a { text-decoration: none; } footer a:hover { color: var(--water); }
   <div class="bigname" aria-hidden="true"><div class="bn-row" id="nameRow"><span>Gyanasai Adusumilli</span><span>Gyanasai Adusumilli</span><span>Gyanasai Adusumilli</span></div></div>
 </header>
 
+<div class="botband">
+  <div class="wrap botrow">
+    <div class="nowcard">
+      <span class="nowlabel">Currently</span>
+      <p>Open to ML engineer, AI engineer and data scientist roles, starting December 2026.</p>
+      <div class="nowlinks"><a href="Gyanasai_Adusumilli_Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a><a href="#contact">Get in touch ↓</a></div>
+    </div>
+    <p class="bubble" id="bubble" aria-live="polite">Hi, I'm Bit. I read data for fun. Scroll and I'll keep up.</p>
+    <button class="bot" id="bot" type="button" aria-label="Bit, a small robot mascot. Tap to say hi.">
+      <svg viewBox="0 0 220 270" aria-hidden="true">
+        <ellipse class="b-shadow" cx="110" cy="258" rx="46" ry="7"/>
+        <g class="b-float">
+          <ellipse class="b-flame" cx="110" cy="226" rx="16" ry="20"/>
+          <g class="b-arm b-arm-l"><rect x="40" y="166" width="22" height="46" rx="11"/></g>
+          <g class="b-arm b-arm-r"><rect x="158" y="166" width="22" height="46" rx="11"/></g>
+          <rect class="b-torso" x="66" y="150" width="88" height="66" rx="28"/>
+          <circle class="b-core" cx="110" cy="183" r="9"/>
+          <line class="b-stalk" x1="110" y1="44" x2="110" y2="20"/>
+          <circle class="b-tip" cx="110" cy="15" r="8"/>
+          <circle class="b-ear" cx="34" cy="98" r="13"/><circle class="b-ear" cx="186" cy="98" r="13"/>
+          <rect class="b-head" x="34" y="40" width="152" height="118" rx="50"/>
+          <rect class="b-visor" x="50" y="60" width="120" height="76" rx="34"/>
+          <g class="b-face">
+            <g class="b-eyes"><rect class="b-eye" x="77" y="82" width="16" height="30" rx="8"/><rect class="b-eye" x="127" y="82" width="16" height="30" rx="8"/></g>
+            <g class="b-joy"><path d="M73 102q12-16 24 0"/><path d="M123 102q12-16 24 0"/></g>
+            <text class="b-bits" x="110" y="106" text-anchor="middle">0101</text>
+            <text class="b-word" x="110" y="106" text-anchor="middle">HIRE</text>
+          </g>
+          <rect class="b-glare" x="62" y="68" width="34" height="9" rx="4.5"/>
+        </g>
+      </svg>
+    </button>
+  </div>
+</div>
+<div class="minibot" id="minibot" aria-hidden="true">
+  <p class="mbubble" id="mbubble"></p>
+  <button class="bot mini" id="bot2" type="button" tabindex="-1"><svg viewBox="0 0 220 270" aria-hidden="true">
+        <ellipse class="b-shadow" cx="110" cy="258" rx="46" ry="7"/>
+        <g class="b-float">
+          <ellipse class="b-flame" cx="110" cy="226" rx="16" ry="20"/>
+          <g class="b-arm b-arm-l"><rect x="40" y="166" width="22" height="46" rx="11"/></g>
+          <g class="b-arm b-arm-r"><rect x="158" y="166" width="22" height="46" rx="11"/></g>
+          <rect class="b-torso" x="66" y="150" width="88" height="66" rx="28"/>
+          <circle class="b-core" cx="110" cy="183" r="9"/>
+          <line class="b-stalk" x1="110" y1="44" x2="110" y2="20"/>
+          <circle class="b-tip" cx="110" cy="15" r="8"/>
+          <circle class="b-ear" cx="34" cy="98" r="13"/><circle class="b-ear" cx="186" cy="98" r="13"/>
+          <rect class="b-head" x="34" y="40" width="152" height="118" rx="50"/>
+          <rect class="b-visor" x="50" y="60" width="120" height="76" rx="34"/>
+          <g class="b-face">
+            <g class="b-eyes"><rect class="b-eye" x="77" y="82" width="16" height="30" rx="8"/><rect class="b-eye" x="127" y="82" width="16" height="30" rx="8"/></g>
+            <g class="b-joy"><path d="M73 102q12-16 24 0"/><path d="M123 102q12-16 24 0"/></g>
+            <text class="b-bits" x="110" y="106" text-anchor="middle">0101</text>
+            <text class="b-word" x="110" y="106" text-anchor="middle">HIRE</text>
+          </g>
+          <rect class="b-glare" x="62" y="68" width="34" height="9" rx="4.5"/>
+        </g>
+      </svg></button>
+</div>
 <div class="marquee" aria-label="Tools I use">
   <div class="track">
     <span>PyTorch</span><span>scikit-learn</span><span>Hugging Face</span><span>LangChain</span><span>FAISS</span><span>OpenCV</span><span>Google Earth Engine</span><span>FastAPI</span><span>Docker</span><span>PostgreSQL</span><span>MySQL</span><span>Python</span>
@@ -617,6 +721,79 @@ footer a { text-decoration: none; } footer a:hover { color: var(--water); }
       } else last = 0;
       requestAnimationFrame(loopBits);
     })(0);
+  }
+
+  /* Bit, an original robot mascot. The big one lives under the name; a small copy follows down the page as a guide.
+     Eyes follow the pointer, it leans with the scroll, shows binary when you scroll fast, and waves and spins when tapped.
+     Five taps in a row: its visor spells HIRE ME. */
+  const mkBot = (el, bubbleEl) => ({ el, bubbleEl, fl: el.querySelector('.b-float'), eyes: el.querySelector('.b-eyes'), eyeEls: [...el.querySelectorAll('.b-eye')],
+    armR: el.querySelector('.b-arm-r'), flame: el.querySelector('.b-flame'), sh: el.querySelector('.b-shadow'), bits: el.querySelector('.b-bits'), word: el.querySelector('.b-word'),
+    spin: 0, wave: 0, blink: 0, nb: 2600 + Math.random() * 1500, bitT: 0, vis: false, taps: 0, tapT: 0 });
+  const botEl = document.getElementById('bot'), mini = document.getElementById('minibot');
+  if (botEl) {
+    const big = mkBot(botEl, document.getElementById('bubble')), small = mkBot(document.getElementById('bot2'), document.getElementById('mbubble')), bots = [big, small];
+    let px = innerWidth / 2, py = innerHeight / 2, vy = 0, lean = 0, lastY = scrollY, t0 = 0;
+    addEventListener('pointermove', e => { px = e.clientX; py = e.clientY; }, { passive: true });
+    addEventListener('touchmove', e => { const t = e.touches[0]; if (t) { px = t.clientX; py = t.clientY; } }, { passive: true });
+    const say = (b, html, ms) => { b.bubbleEl.innerHTML = html; b.bubbleEl.classList.add('on'); clearTimeout(b._say); if (ms) b._say = setTimeout(() => b.bubbleEl.classList.remove('on'), ms); };
+    const hire = b => { b.el.classList.add('hire'); let i = 0; const w = ['HIRE', 'ME', 'HIRE', 'ME'];
+      const step = () => { b.word.textContent = w[i++]; if (i < w.length) setTimeout(step, 650); else setTimeout(() => b.el.classList.remove('hire'), 650); }; step();
+      say(b, "Psst: Gyanasai is open to <b>ML, AI and data science roles</b>. The résumé is one click away.", 6000); };
+    bots.forEach(b => b.el.addEventListener('click', () => {
+      const now = performance.now(); b.taps = now - b.tapT < 1200 ? b.taps + 1 : 1; b.tapT = now;
+      b.spin = 1; b.wave = 1; b.el.classList.add('joy'); clearTimeout(b._j); b._j = setTimeout(() => b.el.classList.remove('joy'), 1100);
+      if (b.taps >= 5) { b.taps = 0; hire(b); } else say(b, b.taps >= 3 ? `${5 - b.taps} more taps…` : 'Hi! Tap me five times for a secret.', 2600);
+    }));
+    new IntersectionObserver(es => { big.vis = es[0].isIntersecting; mini.classList.toggle('on', !big.vis && scrollY > innerHeight * .6); small.vis = mini.classList.contains('on');
+      if (big.vis) setTimeout(() => say(big, "Hi, I'm Bit. I read data for fun. Scroll and I'll come along."), 400); }, { threshold: .25 }).observe(botEl);
+    addEventListener('scroll', () => { const on = !big.vis && scrollY > innerHeight * .6; mini.classList.toggle('on', on); small.vis = on; }, { passive: true });
+
+    /* The small Bit points out the best numbers as each part of the page comes into view */
+    const tips = [
+      ['.c-hotel', 'My favourite: the booked hotel lands in the <b>top 5 for 58.8%</b> of searches.'],
+      ['.c-water', 'This one maps water from space: <b>0.984 IoU</b> on Sentinel-2.'],
+      ['.c-colon', 'Medical imaging, with a <b>live demo</b> you can try.'],
+      ['.c-symp', 'A team project with retrieval over <b>240,000+ cases</b>.'],
+      ['#impact', 'The numbers from OYO and grad school.'],
+      ['#journey', 'Stevens, OYO and SRM, in order.'],
+      ['#contact', 'Say hi: the email <b>copies in one click</b>.']
+    ];
+    let lastTip = '';
+    const showing = new Set();
+    const tryTip = () => { if (!small.vis) return; const t = tips.find(([sel]) => showing.has(sel)); if (!t || t[0] === lastTip) return; lastTip = t[0]; say(small, t[1], 5200); };
+    const tipIO = new IntersectionObserver(es => { es.forEach(e => { const t = tips.find(([sel]) => e.target.matches(sel)); if (!t) return;
+      e.isIntersecting ? showing.add(t[0]) : showing.delete(t[0]); }); tryTip(); }, { threshold: .45 });
+    addEventListener('scroll', () => setTimeout(tryTip, 650), { passive: true });
+    tips.forEach(([sel]) => { const el = document.querySelector(sel); if (el) tipIO.observe(el); });
+    let byeDone = false;
+    addEventListener('scroll', () => { if (byeDone || !small.vis) return; if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) {
+      byeDone = true; small.wave = 1; small.spin = 1; say(small, 'Thanks for stopping by. <b>Bye!</b>', 4500); } }, { passive: true });
+
+    const ease = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+    function frame(t) {
+      const dt = t0 ? Math.min(.05, (t - t0) / 1000) : 0; t0 = t;
+      const y = scrollY, dy = y - lastY; lastY = y;
+      vy += (Math.max(-70, Math.min(70, dy)) - vy) * .2; lean += (vy * .4 - lean) * .1;
+      const fast = Math.abs(vy) > 14;
+      bots.forEach(b => { if (!b.vis || document.hidden) return;
+        b.el.classList.toggle('data', fast && !b.el.classList.contains('joy'));
+        if (fast) { b.bitT += dt; if (b.bitT > .08) { b.bitT = 0; b.bits.textContent = Array.from({ length: 4 }, () => Math.random() < .5 ? 0 : 1).join(''); }
+          if (b === big && Math.abs(vy) > 40) say(big, "Whoa, that's a lot of data. Slow down!"); }
+        const bob = reduce ? 0 : Math.sin(t / 550 + (b === small ? 1.7 : 0)) * 6;
+        b.spin = Math.max(0, b.spin - dt * 1.25); const rot = b.spin > 0 ? (1 - ease(1 - b.spin)) * 360 : 0;
+        b.fl.setAttribute('transform', `translate(0 ${bob - Math.abs(vy) * .15}) rotate(${-lean + rot} 110 140)`);
+        b.sh.setAttribute('transform', `translate(110 258) scale(${1 - bob / 40} 1) translate(-110 -258)`);
+        b.flame.setAttribute('ry', 18 + Math.sin(t / 60) * 3 + Math.abs(vy) * .25);
+        b.wave = Math.max(0, b.wave - dt * .9); b.armR.setAttribute('transform', `rotate(${-Math.sin(b.wave * Math.PI * 4) * 40 * b.wave - (b.wave > 0 ? 60 * Math.min(1, b.wave * 3) : 0)} 168 172)`);
+        const r = b.el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height * .36, a = Math.atan2(py - cy, px - cx), d = Math.min(1, Math.hypot(px - cx, py - cy) / 320);
+        b.eyes.setAttribute('transform', `translate(${Math.cos(a) * 9 * d} ${Math.sin(a) * 7 * d})`);
+        b.nb -= dt * 1000; if (b.nb < 0) { b.blink = 1; b.nb = 2400 + Math.random() * 2800; }
+        b.blink = Math.max(0, b.blink - dt * 8); const sc = 1 - Math.sin(b.blink * Math.PI) * .9;
+        b.eyeEls.forEach(e => { e.setAttribute('height', 30 * sc); e.setAttribute('y', 82 + 15 * (1 - sc)); });
+      });
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
   }
 
   /* Scroll progress line */
