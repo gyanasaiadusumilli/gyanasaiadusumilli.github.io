@@ -244,7 +244,9 @@ h2 { font-family: var(--display); font-weight: 800; font-size: clamp(32px, 5vw, 
 .mail span { user-select: all; }
 .mail button { border: 0; border-radius: 999px; padding: 10px 18px; background: var(--fg); color: var(--bg); font: 600 14px var(--body); cursor: pointer; }
 footer { border-top: 1px solid var(--line); padding-block: 28px 44px; color: var(--muted); font-size: 14px; }
-footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+footer .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px 24px; flex-wrap: wrap; }
+footer a { text-decoration: none; } footer a:hover { color: var(--water); }
+@media (max-width: 640px) { footer .wrap { flex-direction: column; align-items: flex-start; } }
 
 @media (prefers-reduced-motion: reduce) {
   .grain, .track, .status::before { animation: none; }
@@ -441,7 +443,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   </section>
 </main>
 
-<footer><div class="wrap"><span>Gyanasai Adusumilli, 2026</span><a href="#top">Back to top</a></div></footer>
+<footer><div class="wrap"><span>© 2026 Gyanasai Adusumilli</span><span>Built with curiosity. Grounded in data.</span><a href="#top">Back to top ↑</a></div></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
