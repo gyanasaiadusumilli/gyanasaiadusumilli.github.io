@@ -8,11 +8,11 @@
 <meta name="author" content="Gyanasai Adusumilli">
 <link rel="canonical" href="https://gyanasai.me/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<meta name="theme-color" content="#07111A">
+<meta name="theme-color" content="#141517">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://gyanasai.me/">
 <meta property="og:title" content="Gyanasai Adusumilli | Data Science and ML">
-<meta property="og:description" content="MS Data Science at Stevens Institute of Technology. Projects in computer vision, remote sensing and AI.">
+<meta property="og:description" content="ML engineer and data scientist, MS Data Science at Stevens. Projects in ranking, computer vision and retrieval.">
 <meta property="og:image" content="https://gyanasai.me/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -24,18 +24,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: dark-first page. Ray-marched black hole hero (lensing, Doppler-lit accretion disk in the water/land palette), tech marquee,
+/* Layout: dark-first page. Greeting preloader, hero with the name sliding past in oversized type, tech marquee,
    bento grid of projects (live NDWI tile in the lead card), impact counters, timeline, big contact close. */
 :root {
-  --bg: #07111A;
-  --panel: #0D1B26;
-  --panel-2: #12242F;
-  --fg: #E7F0F2;
-  --muted: #8A9FA9;
-  --line: #1D3240;
-  --water: #5ED3DF;
-  --land: #D8B26C;
-  --glow: rgba(94, 211, 223, 0.16);
+  /* Charcoal, white and electric blue, with warm sand for "land" in the project visuals */
+  --bg: #141517;
+  --panel: #1C1D20;
+  --panel-2: #25262B;
+  --fg: #F4F4F2;
+  --muted: #9C9DA3;
+  --line: #2E2F34;
+  --water: #7584FF;
+  --land: #D9C29A;
+  --glow: rgba(117, 132, 255, 0.16);
   --ink-hole: #000000;
   --display: "Unbounded", "Avenir Next", system-ui, sans-serif;
   --body: "Geist", "Segoe UI", system-ui, sans-serif;
@@ -44,14 +45,14 @@
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --bg: #EDF2F3; --panel: #FFFFFF; --panel-2: #E3ECEE; --fg: #0E1E28; --muted: #546A74;
-    --line: #CFDCDF; --water: #08808D; --land: #9C7228; --glow: rgba(8, 128, 141, 0.12);
+    --bg: #F4F4F2; --panel: #FFFFFF; --panel-2: #EBEBEE; --fg: #1C1D20; --muted: #5F6168;
+    --line: #DDDDE0; --water: #3F4FE0; --land: #7E6026; --glow: rgba(63, 79, 224, 0.10);
     color-scheme: light;
   }
 }
 :root[data-theme="light"] {
-  --bg: #EDF2F3; --panel: #FFFFFF; --panel-2: #E3ECEE; --fg: #0E1E28; --muted: #546A74;
-  --line: #CFDCDF; --water: #08808D; --land: #9C7228; --glow: rgba(8, 128, 141, 0.12);
+  --bg: #F4F4F2; --panel: #FFFFFF; --panel-2: #EBEBEE; --fg: #1C1D20; --muted: #5F6168;
+  --line: #DDDDE0; --water: #3F4FE0; --land: #7E6026; --glow: rgba(63, 79, 224, 0.10);
   color-scheme: light;
 }
 
@@ -97,19 +98,26 @@ a { color: inherit; }
 @media (max-width: 560px) { .nav .opt { display: none; } }
 
 /* Hero */
-.hero { position: relative; min-height: max(640px, 100svh); padding-block: 150px 90px; overflow: hidden; }
-#hole { position: absolute; inset: 0; width: 100%; height: 100%; display: block; background: var(--bg); }
-.hero-veil { position: absolute; inset: 0; pointer-events: none; z-index: 1;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bg) 82%, transparent) 0%, color-mix(in srgb, var(--bg) 40%, transparent) 38%, transparent 60%); }
-.hero.no-gl #hole { background: radial-gradient(circle at 70% 50%, #000 0 9%, var(--land) 10%, color-mix(in srgb, var(--water) 30%, transparent) 14%, transparent 34%), var(--bg); }
-.hud { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .6s; }
-.hud.on { opacity: 1; }
-.hud svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.hud line { stroke: var(--muted); stroke-width: 1; }
-.hud circle { fill: none; stroke: var(--water); stroke-width: 1; }
-.hud .tag { position: absolute; font-family: var(--mono); font-size: 12px; line-height: 1.4; color: var(--muted); white-space: nowrap; }
-.hud .tag b { display: block; color: var(--fg); font-weight: 500; }
-@media (max-width: 1023px) { .hud { display: none; } }
+.hero { position: relative; min-height: max(680px, 100svh); padding-block: 140px 0; overflow: hidden; display: flex; flex-direction: column; }
+.hero > .wrap { width: 100%; }
+#bits { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.25) 30%, #000 55%, #000 100%), linear-gradient(180deg, #000 70%, transparent 92%);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.25) 30%, #000 55%, #000 100%); }
+.hero > .wrap, .hero .bigname { position: relative; z-index: 1; }
+.bittag { position: absolute; z-index: 1; right: clamp(16px, 4vw, 40px); top: 100px; font-family: var(--mono); font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+.bittag b { color: var(--water); font-weight: 500; font-size: 16px; margin-right: 2px; }
+@media (max-width: 899px) { .bittag { display: none; } }
+.sr-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.bigname { margin-top: auto; padding-top: 40px; padding-bottom: clamp(10px, 2.5vh, 28px); overflow: hidden; pointer-events: none; }
+.bigname .bn-row { display: flex; width: max-content; }
+.bigname span { font-family: var(--display); font-weight: 800; font-size: clamp(84px, 14vw, 230px); line-height: 1.1; letter-spacing: -0.04em; white-space: nowrap; padding-right: .3em; color: var(--fg); }
+.bigname span::after { content: ""; display: inline-block; width: .16em; height: .16em; margin-left: .3em; border-radius: 50%; background: var(--water); vertical-align: middle; }
+.loader { position: fixed; inset: 0; z-index: 200; background: var(--bg); color: var(--fg); display: grid; place-items: center; transition: transform 1s cubic-bezier(.76,0,.24,1); }
+.loader p { font-family: var(--display); font-weight: 600; font-size: clamp(34px, 5vw, 58px); margin: 0; display: flex; align-items: center; gap: 16px; }
+.loader p::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--water); }
+.loader::after { content: ""; position: absolute; left: -10%; right: -10%; top: 100%; height: 16vh; background: var(--bg); border-radius: 0 0 50% 50%; }
+.loader.up { transform: translateY(-120%); }
+.no-loader .loader { display: none; }
 .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 60; background: var(--water); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
 .name .ch { display: inline-block; font-style: normal; }
 .hero-glow { position: absolute; width: 700px; height: 700px; opacity: .6; right: -250px; top: -120px; border-radius: 50%;
@@ -138,7 +146,7 @@ a { color: inherit; }
 .status { display: inline-flex; align-items: center; gap: 8px; }
 .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #3DDC84; box-shadow: 0 0 0 0 rgba(61,220,132,.6); animation: ping 2s infinite; }
 @keyframes ping { 70% { box-shadow: 0 0 0 8px rgba(61,220,132,0); } 100% { box-shadow: 0 0 0 0 rgba(61,220,132,0); } }
-@media (max-width: 760px) { .hero { padding-block: 120px 60px; } .hero-veil { background: linear-gradient(180deg, transparent 0%, transparent 18%, color-mix(in srgb, var(--bg) 70%, transparent) 50%, color-mix(in srgb, var(--bg) 80%, transparent) 100%); } }
+@media (max-width: 760px) { .hero { padding-block: 120px 60px; } }
 
 /* Marquee */
 .marquee { border-block: 1px solid var(--line); overflow: hidden; padding-block: 18px; background: var(--panel); }
@@ -167,7 +175,7 @@ h2 { font-family: var(--display); font-weight: 800; font-size: clamp(32px, 5vw, 
 .card > * { position: relative; }
 .c-water { grid-column: span 6; }
 .c-colon, .c-symp { grid-column: span 3; }
-.c-hotel { grid-column: span 6; }
+.c-hotel { grid-column: span 6; order: -1; }
 .rankbars { margin: 0; display: grid; gap: 12px; align-content: center; padding: 18px; border-radius: 14px; background: var(--panel-2); min-width: 0; }
 .rankbars figcaption { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 4px; }
 .rb { display: grid; grid-template-columns: minmax(0, 9.5em) 1fr 3.2em; align-items: center; gap: 10px; font-size: 13.5px; color: var(--muted); }
@@ -259,22 +267,19 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   </button>
 </nav>
 
+<div class="loader" aria-hidden="true"><p id="hello">Hello</p></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <header class="hero" id="top">
-  <canvas id="hole" aria-hidden="true"></canvas>
-  <div class="hero-veil" aria-hidden="true"></div>
-  <div class="hud" id="hud" aria-hidden="true">
-    <svg><line id="l1"/><circle id="c1" r="4"/><line id="l2"/><circle id="c2" r="4"/></svg>
-    <div class="tag" id="t1"><b>Event horizon</b>Light that crosses it never escapes</div>
-    <div class="tag" id="t2"><b>Accretion disk</b>Brighter on the side spinning toward you</div>
-  </div>
+  <canvas id="bits" aria-hidden="true"></canvas>
+  <div class="bittag" id="bitTag" aria-hidden="true"></div>
   <div class="wrap">
     <div class="coords">40.7440° N, 74.0324° W <span>Hoboken, New Jersey</span></div>
-    <h1 class="name"><span class="line"><span>Gyanasai</span></span><span class="line"><span>Adusumilli</span></span></h1>
-    <p class="role">Aspiring data scientist working on <span class="rot" id="rot">ML models</span></p>
-    <p class="sub">Master's student in Data Science at Stevens Institute of Technology. I like building machine learning projects and learning something new with each one.</p>
+    <h1 class="sr-name">Gyanasai Adusumilli</h1>
+    <p class="role">ML engineer and data scientist working on <span class="rot" id="rot">ranking systems</span></p>
+    <p class="sub">Master's student in Data Science at Stevens Institute of Technology. Previously trained learning-to-rank models on OYO's Ranking and Optimization team.</p>
     <div class="ctas">
       <a class="btn primary magnet" href="#work">View my work</a>
+      <a class="btn magnet" href="Gyanasai_Adusumilli_Resume.pdf" target="_blank" rel="noopener">Résumé</a>
       <a class="btn magnet" href="https://github.com/gyanasaiadusumilli" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>GitHub</a>
       <a class="btn magnet" href="https://www.linkedin.com/in/gyanasai" target="_blank" rel="noopener">
@@ -285,6 +290,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <p><b>Graduating December 2026</b><br><span class="status">Open to ML, AI and data science roles</span></p>
     </div>
   </div>
+  <div class="bigname" aria-hidden="true"><div class="bn-row" id="nameRow"><span>Gyanasai Adusumilli</span><span>Gyanasai Adusumilli</span><span>Gyanasai Adusumilli</span></div></div>
 </header>
 
 <div class="marquee" aria-label="Tools I use">
@@ -334,7 +340,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
             <div style="display:grid;gap:14px;min-width:0">
               <div class="kind">Learning to rank</div>
               <h3>Hotel Search Ranking</h3>
-              <p>Ranks hotels in 400k real Expedia searches so the ones travellers book appear first. Six rule-based rankings and two pointwise models go up against LambdaMART, scored on future searches with NDCG and offline A/B tests.</p>
+              <p>Ranks hotels in nearly 200,000 real Expedia searches so the ones travellers book appear first. Six rule-based rankings and two pointwise models go up against LambdaMART, scored on future searches with NDCG and offline A/B tests.</p>
               <p><b style="color:var(--fg)">Booked hotel in the top 5 for 58.8% of searches</b>, versus 42.4% for the best rule. Statistically level with Expedia's own production ranking.</p>
               <ul class="chips"><li>LightGBM</li><li>LambdaMART</li><li>Feature engineering</li><li>A/B testing</li><li>pandas</li></ul>
               <div class="golinks"><a class="go" href="https://github.com/gyanasaiadusumilli/hotel-search-ranking" target="_blank" rel="noopener">Code and results <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M8 7h9v9"/></svg></a></div>
@@ -363,7 +369,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           <div class="thumb"><canvas class="mini" data-kind="graph" width="96" height="54" aria-hidden="true"></canvas></div>
           <div class="kind">LLM and retrieval, team project</div>
           <h3>Symptoma</h3>
-          <p>Predicts likely conditions from symptoms and explains why: random forest, SentenceTransformers, FAISS retrieval and Mistral-7B. Built with Charaneesh at Stevens.</p>
+          <p>Predicts likely conditions from symptoms and explains why: random forest, SentenceTransformers, FAISS retrieval and Zephyr-7B (a Mistral-7B fine-tune). Built with Charaneesh at Stevens.</p>
           <div class="golinks"><a class="go" href="https://github.com/gyanasaiadusumilli/symptoma" target="_blank" rel="noopener">View code <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M8 7h9v9"/></svg></a></div>
         </article>
       </div>
@@ -506,7 +512,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   }
 
   /* Rotating role word */
-  const words = ['ML models', 'AI projects', 'data analysis', 'computer vision'];
+  const words = ['ranking systems', 'computer vision', 'LLM retrieval', 'A/B testing'];
   const rot = document.getElementById('rot');
   if (!reduce) {
     let wi = 0;
@@ -518,16 +524,15 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     }, 2600);
   }
 
-  /* Page-load moment: the name rises into place */
-  if (window.gsap && !reduce) {
-    const nm = document.querySelector('.name'); nm.setAttribute('aria-label', 'Gyanasai Adusumilli');
-    nm.querySelectorAll('.line > span').forEach(sp => { sp.setAttribute('aria-hidden', 'true'); sp.innerHTML = [...sp.textContent].map(ch => `<i class="ch">${ch}</i>`).join(''); });
-    const chars = nm.querySelectorAll('.ch'), hr = document.querySelector('.hero').getBoundingClientRect();
-    gsap.from(chars, { duration: 1.5, ease: 'expo.out', delay: 0.9, stagger: { each: 0.03, from: 'end' },
-      x: (i, el) => hr.width * 0.68 - el.getBoundingClientRect().left, y: (i, el) => hr.height * 0.48 - el.getBoundingClientRect().top - 40,
-      scale: 0.15, rotation: () => gsap.utils.random(-90, 90), opacity: 0, filter: 'blur(14px)' });
-    gsap.from('.coords, .role, .sub, .ctas, .avatar', { y: 18, opacity: 0, duration: .9, ease: 'power3.out', stagger: 0.08, delay: 1.5 });
-  }
+  /* Page-load moment: a greeting in a few languages, the curtain lifts, the hero settles in */
+  const loader = document.querySelector('.loader'), hello = document.getElementById('hello');
+  let seenIntro = false; try { seenIntro = sessionStorage.getItem('ga-hello') === '1'; sessionStorage.setItem('ga-hello', '1'); } catch (e) {}
+  const settle = d => { if (window.gsap && !reduce) {
+    gsap.from('.bigname .bn-row', { yPercent: 110, duration: 1.3, ease: 'expo.out', delay: d });
+    gsap.from('.coords, .role, .sub, .ctas, .avatar', { y: 18, opacity: 0, duration: .9, ease: 'power3.out', stagger: 0.08, delay: d + 0.15 }); } };
+  if (reduce || seenIntro) { root.classList.add('no-loader'); settle(0.1); }
+  else { const greet = ['Hello', 'नमस्ते', 'Bonjour', 'Hola', 'Welcome']; let gi = 0;
+    const gt = setInterval(() => { hello.textContent = greet[++gi]; if (gi === greet.length - 1) { clearInterval(gt); setTimeout(() => { loader.classList.add('up'); settle(0.3); }, 300); } }, 170); }
 
   /* Count-up when stats scroll into view (final values are already in the HTML) */
   if (window.gsap && window.ScrollTrigger && !reduce) {
@@ -541,170 +546,88 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     });
   }
 
-  /* ---------- Black hole hero: ray-marched lensing in a fragment shader ----------
-     Light rays bend around a Schwarzschild black hole (units of the event-horizon radius).
-     The accretion disk is lit in the page's water/land colours; the side spinning toward
-     the viewer is brighter (Doppler beaming). Pointer tilts the camera, scrolling pulls it in. */
-  const bh = document.getElementById('hole');
-  const gl = bh && (bh.getContext('webgl', { antialias: false, alpha: false, premultipliedAlpha: false }) || bh.getContext('experimental-webgl'));
-  if (!gl) document.querySelector('.hero').classList.add('no-gl');
-  else {
-    const vs = 'attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }';
-    const fs = `
-precision highp float;
-uniform vec2 uRes; uniform vec2 uC; uniform float uT, uS, uIntro, uLight, uIncl, uYaw;
-uniform vec3 uHot, uWarm, uBg, uInk;
-float h3(vec3 p){ p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
-float h2(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
-  return mix(mix(h2(i), h2(i + vec2(1, 0)), f.x), mix(h2(i + vec2(0, 1)), h2(i + vec2(1, 1)), f.x), f.y); }
-float fbm(vec2 p){ float s = 0.0, a = 0.5; for (int i = 0; i < 4; i++) { s += a * vn(p); p = p * 2.03 + 7.1; a *= 0.5; } return s; }
-vec3 sky(vec3 d){
-  vec3 c = vec3(0.0);
-  for (int i = 0; i < 2; i++) {
-    float s = i == 0 ? 90.0 : 210.0;
-    vec3 q = d * s, id = floor(q), f = fract(q) - 0.5;
-    float h = h3(id);
-    if (h > 0.972) { float b = smoothstep(0.42, 0.0, length(f)); c += b * b * (h - 0.972) * 34.0 * mix(vec3(1.0), uHot, h3(id + 3.0) * 0.6); }
+  /* Hero background: my name in binary (8-bit ASCII), dripping down one digit at a time onto the big name.
+     Each drip is one letter's byte; scrolling makes it rain harder. */
+  const bc = document.getElementById('bits');
+  if (bc) {
+    const g = bc.getContext('2d'), NAME = 'Gyanasai Adusumilli';
+    const BYTES = [...NAME].map(ch => ({ ch, b: ch.charCodeAt(0).toString(2).padStart(8, '0') }));
+    const tag = document.getElementById('bitTag');
+    let W = 0, H = 0, fs = 15, land = 0, drips = [], splashes = [], li = 0, spawnT = 0, last = 0, bvis = true, boost = 0, lastSY = scrollY;
+    const tone = () => { const st = getComputedStyle(root); return [st.getPropertyValue('--muted').trim(), st.getPropertyValue('--water').trim(), st.getPropertyValue('--fg').trim()]; };
+    let [cMuted, cAccent, cFg] = tone(); onTheme.push(() => { [cMuted, cAccent, cFg] = tone(); });
+    function sizeBits() { const r = bc.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2); W = r.width; H = r.height;
+      bc.width = W * dpr; bc.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0); fs = W < 700 ? 13 : 16; findLand(); }
+    function findLand() { const sp = document.querySelector('.bigname span'), r = bc.getBoundingClientRect();
+      if (!sp) { land = H; return; } const sr = sp.getBoundingClientRect(); land = sr.top - r.top + sr.height * 0.22; }
+    function spawn() {
+      const L = BYTES[li % BYTES.length]; li++;
+      if (L.ch === ' ') return;
+      const phone = W < 760, minX = phone ? 16 : W < 900 ? W * 0.5 : W * 0.42;
+      drips.push({ x: minX + Math.random() * (W - minX - 24), y: phone ? land - fs * 6 : -fs * 10, top: phone ? land - fs * 7.5 : -1e9, v: 110 + Math.random() * 70, bits: L.b, ch: L.ch, hit: 0 });
+      if (tag) tag.innerHTML = `<b>${L.ch}</b> = ${L.b}`;
+    }
+    function step(dt, now) {
+      g.clearRect(0, 0, W, H);
+      g.font = `600 ${fs}px "Geist Mono", ui-monospace, monospace`; g.textAlign = 'center'; g.textBaseline = 'middle';
+      const gap = fs * 1.15;
+      drips.forEach(d => {
+        d.y += d.v * (1 + boost * 2.2) * dt;
+        for (let k = 0; k < 8; k++) {                         // digit 0 is the head (last to fall), digit 7 trails above
+          const y = d.y - k * gap; if (y < -fs || y < (d.top ?? -1e9)) continue;
+          if (y >= land) { if (d.hit <= k) { d.hit = k + 1; splashes.push({ x: d.x, t: now, big: k === 0 }); } continue; }
+          const age = k / 7;
+          g.globalAlpha = k === 0 ? 1 : 0.85 - age * 0.6;
+          g.fillStyle = k === 0 ? cAccent : (k < 3 ? cFg : cMuted);
+          g.fillText(d.bits[7 - k], d.x, y);
+        }
+      });
+      drips = drips.filter(d => d.y - 7 * gap < land + fs);
+      splashes.forEach(p => { const k = (now - p.t) / 520; if (k > 1) return;
+        g.globalAlpha = (1 - k) * (p.big ? 0.9 : 0.5); g.strokeStyle = cAccent; g.lineWidth = 1.5;
+        g.beginPath(); g.ellipse(p.x, land, (p.big ? 22 : 12) * k + 3, (p.big ? 5 : 3) * k + 1, 0, 0, Math.PI * 2); g.stroke();
+        if (p.big && k < .5) { g.fillStyle = cAccent; [-1, 1].forEach(sg => { g.beginPath(); g.arc(p.x + sg * 14 * k * 2, land - 18 * Math.sin(k * Math.PI * 2) , 2, 0, 7); g.fill(); }); } });
+      splashes = splashes.filter(p => now - p.t < 520);
+      g.globalAlpha = 1;
+    }
+    addEventListener('scroll', () => { const y = scrollY; boost = Math.min(1, boost + Math.abs(y - lastSY) / 300); lastSY = y; }, { passive: true });
+    new IntersectionObserver(es => bvis = es[0].isIntersecting).observe(bc);
+    addEventListener('resize', sizeBits); sizeBits(); if (document.fonts) document.fonts.ready.then(sizeBits);
+    const ready = () => reduce || root.classList.contains('no-loader') || document.querySelector('.loader.up');
+    if (reduce) {                                               // still frame: one byte per letter, resting just above the name
+      const draw = () => { sizeBits(); const n = Math.min(10, Math.floor((W * 0.55) / (fs * 2.2)));
+        for (let i = 0; i < n; i++) drips.push({ x: W * 0.42 + i * fs * 2.2 + fs, y: land - fs * 2 - (i % 3) * fs * 3, v: 0, bits: BYTES[i].b, hit: 0 }); step(0, 0); };
+      setTimeout(draw, 300);
+    } else (function loopBits(t) {
+      if (bvis && !document.hidden && ready()) {
+        const dt = last ? Math.min(.05, (t - last) / 1000) : 0; last = t;
+        boost *= 0.94; spawnT -= dt * (1 + boost * 4);
+        if (spawnT <= 0) { spawn(); spawnT = 0.55; }
+        if (t % 1000 < 20) findLand();
+        step(dt, t);
+      } else last = 0;
+      requestAnimationFrame(loopBits);
+    })(0);
   }
-  float neb = fbm(d.xy * 2.2 + d.z * 1.3);
-  return c + uHot * pow(neb, 3.0) * 0.07 + uWarm * pow(fbm(d.zy * 3.1 - 4.0), 4.0) * 0.05;
-}
-void main(){
-  vec2 uv = (gl_FragCoord.xy - uC * uRes) / uRes.y / uS;
-  float D = 22.0;
-  vec3 ro = D * vec3(sin(uYaw) * cos(uIncl), sin(uIncl), -cos(uYaw) * cos(uIncl));
-  vec3 fw = normalize(-ro), rt = normalize(cross(vec3(0, 1, 0), fw)), up = cross(fw, rt);
-  vec3 p = ro, v = normalize(fw * 2.4 + rt * uv.x + up * uv.y);
-  vec3 hh = cross(p, v); float L2 = dot(hh, hh);
-  vec3 col = vec3(0.0); float a = 0.0; bool hit = false;
-  for (int i = 0; i < 200; i++) {
-    float r2 = dot(p, p), r = sqrt(r2);
-    if (r < 1.0) { hit = true; break; }
-    if (r > 60.0 || a > 0.99 || (r > 12.0 && dot(p, v) > 0.0)) break;
-    float dt = clamp(0.06 * r, 0.015, 1.4) * (r < 3.2 ? 0.45 : 1.0);
-    v += -1.5 * L2 * p / (r2 * r2 * r) * dt;
-    vec3 pn = p + v * dt;
-    if (p.y * pn.y < 0.0) {
-      vec3 c = mix(p, pn, p.y / (p.y - pn.y));
-      float rc = length(c.xz);
-      if (rc > 2.6 && rc < 11.0) {
-        float rot = uT * 1.6 * pow(rc, -1.5);
-        float cs = cos(rot), sn = sin(rot);
-        vec2 q = mat2(cs, -sn, sn, cs) * c.xz;
-        float n = fbm(q * 0.9) * 0.6 + fbm(vec2(rc * 3.2, 0.0) + q * 0.25) * 0.55;
-        float heat = pow(3.0 / rc, 1.7);
-        vec3 orb = normalize(vec3(-c.z, 0.0, c.x));
-        float dop = 1.0 + 0.85 * dot(orb, normalize(v)) * sqrt(1.5 / rc);
-        float lum = heat * pow(clamp(dop, 0.25, 3.0), 3.0) * (0.35 + 1.25 * n)
-                  * smoothstep(2.6, 3.4, rc) * smoothstep(11.0, 6.0, rc) * uIntro;
-        vec3 dc = mix(uWarm, uHot, smoothstep(0.15, 0.9, heat));
-        dc = mix(dc, vec3(1.0), smoothstep(1.1, 2.8, lum) * (1.0 - uLight));
-        float da = clamp(lum * 0.95, 0.0, 1.0);
-        col += (1.0 - a) * dc * min(lum, 1.7) * (1.0 - 0.45 * uLight);
-        a += (1.0 - a) * da;
-      }
-    }
-    p = pn;
-  }
-  vec3 bg = mix(uBg + sky(normalize(v)) * (hit ? 0.0 : 1.0), uBg, uLight);
-  vec3 shadow = uLight > 0.5 ? uInk : vec3(0.0);
-  vec3 base = hit ? shadow : bg;
-  vec3 outc = uLight > 0.5 ? mix(base, col / max(a, 0.001), a) : base * (1.0 - a) + col;
-  float fade = smoothstep(0.0, 0.16, gl_FragCoord.y / uRes.y);
-  gl_FragColor = vec4(mix(uBg, outc, fade), 1.0);
-}`;
-    const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o);
-      if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) console.warn(gl.getShaderInfoLog(o)); return o; };
-    const pr = gl.createProgram();
-    gl.attachShader(pr, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr); gl.useProgram(pr);
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    const U = {}; ['uRes', 'uC', 'uT', 'uS', 'uIntro', 'uLight', 'uIncl', 'uYaw', 'uHot', 'uWarm', 'uBg', 'uInk'].forEach(k => U[k] = gl.getUniformLocation(pr, k));
-    const rgb = n => hex(css(n)).map(x => x / 255);
-    function themeColors() {
-      gl.uniform3fv(U.uHot, rgb('--water')); gl.uniform3fv(U.uWarm, rgb('--land'));
-      gl.uniform3fv(U.uBg, rgb('--bg')); gl.uniform3fv(U.uInk, rgb('--ink-hole'));
-      gl.uniform1f(U.uLight, isLight() ? 1 : 0);
-      if (reduce) frame(performance.now());
-    }
-    let q = matchMedia('(max-width: 760px)').matches ? 0.55 : 0.75, narrow = false;
-    function resize() {
-      const w = bh.clientWidth, h = bh.clientHeight; if (!w || !h) return;
-      const k = Math.min(q, Math.sqrt(650000 / (w * h)));   // at most ~650k shaded pixels
-      bh.width = Math.round(w * k); bh.height = Math.round(h * k);
-      gl.viewport(0, 0, bh.width, bh.height); gl.uniform2f(U.uRes, bh.width, bh.height);
-      narrow = w < 760;
-      hudS = -1;
-      if (reduce) frame(performance.now());
-    }
-    let tx = 0, ty = 0, sx = 0, sy = 0, scroll = 0, visible = true, intro = reduce ? 1 : 0, t0 = performance.now();
-    addEventListener('pointermove', e => { tx = e.clientX / innerWidth - 0.5; ty = e.clientY / innerHeight - 0.5; });
-    const prog = document.getElementById('progress');
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - innerHeight;
-      prog.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
-    };
-    addEventListener('scroll', onScroll, { passive: true }); onScroll();
-    // Scroll story: on wide screens the hero pins and you fall toward the hole before the page continues.
-    const wide = matchMedia('(min-width: 1024px)').matches;
-    if (window.gsap && window.ScrollTrigger && !reduce && wide) {
-      gsap.registerPlugin(ScrollTrigger);
-      const st = { v: 0 };
-      gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=110%', scrub: 1, pin: true, anticipatePin: 1 } })
-        .to(st, { v: 1, ease: 'none', duration: 1, onUpdate: () => { scroll = st.v; } }, 0)
-        .to('.hero .wrap', { xPercent: -8, opacity: 0, ease: 'power1.in', duration: 0.55 }, 0)
-        .to('.hero-veil', { opacity: 0, duration: 0.4 }, 0);
-    } else {
-      addEventListener('scroll', () => { scroll = Math.min(1, scrollY / Math.max(1, bh.clientHeight)); }, { passive: true });
-    }
-    // Annotations, placed from the same numbers the shader uses (shadow ~2.6 r, lensed disk arc above it).
-    const hud = document.getElementById('hud'), $ = id => document.getElementById(id);
-    let curS = 1, curC = [0.7, 0.52];
-    function placeHud() {
-      const w = bh.clientWidth, h = bh.clientHeight, k = h * curS, cx = curC[0] * w, cy = (1 - curC[1]) * h;
-      const pt = (ux, uy) => [cx + ux * k, cy - uy * k];
-      const [a1x, a1y] = pt(-0.2, -0.2), [a2x, a2y] = pt(0.3, 0.3);
-      const [b1x, b1y] = [a1x - 70, a1y + 110], [b2x, b2y] = [a2x + 60, a2y - 70];
-      const set = (el, o) => Object.entries(o).forEach(([k2, v]) => el.setAttribute(k2, v));
-      set($('l1'), { x1: a1x, y1: a1y, x2: b1x, y2: b1y }); set($('c1'), { cx: a1x, cy: a1y });
-      set($('l2'), { x1: a2x, y1: a2y, x2: b2x, y2: b2y }); set($('c2'), { cx: a2x, cy: a2y });
-      Object.assign($('t1').style, { left: b1x - 120 + 'px', top: b1y + 8 + 'px' });
-      Object.assign($('t2').style, { left: Math.min(b2x - 40, w - 340) + 'px', top: b2y - 46 + 'px' });
-    }
-    setTimeout(() => { placeHud(); hud.classList.add('on'); }, reduce ? 0 : 3400);
-    new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(bh);
-    if (window.gsap && !reduce) gsap.to({ v: 0 }, { v: 1, duration: 2.6, delay: 0.1, ease: 'power2.inOut', onUpdate() { intro = this.targets()[0].v; } });
-    else intro = 1;
-    let frames = 0, acc = 0, last = 0, hudS = -1;
-    function frame(now) {
-      const t = (now - t0) / 1000;
-      sx += (tx - sx) * 0.05; sy += (ty - sy) * 0.05;
-      gl.uniform1f(U.uT, t);
-      curC = narrow ? [0.88, 0.87] : [0.70, 0.52];
-      curS = (narrow ? 0.4 : 0.86) * (0.78 + 0.22 * intro) * (1 + scroll * 2.2);
-      gl.uniform2f(U.uC, curC[0], curC[1]);
-      gl.uniform1f(U.uS, curS);
-      if (hud.classList.contains('on') && Math.abs(curS - hudS) > 1e-4) { hudS = curS; placeHud(); hud.style.opacity = Math.max(0, 1 - scroll * 5); }
-      gl.uniform1f(U.uIntro, intro);
-      gl.uniform1f(U.uIncl, 0.11 + sy * 0.16 + scroll * 0.25);
-      gl.uniform1f(U.uYaw, sx * 0.35);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-    }
-    themeColors(); onTheme.push(themeColors);
-    addEventListener('resize', resize); resize();
-    if (reduce) frame(t0 + 6000);
-    else (function loop(now) {
-      if (visible && !document.hidden && now - last >= 24) {
-        frame(now);
-        // If frames come in slowly, lower the render resolution (up to twice).
-        if (last) { acc += now - last; frames++; }
-        if (frames === 30) { if (acc / 30 > 45 && q > 0.36) { q = q > 0.55 ? 0.5 : 0.35; resize(); } frames = 0; acc = 0; }
-        last = now;
-      }
-      requestAnimationFrame(loop);
-    })(t0);
+
+  /* Scroll progress line */
+  const prog = document.getElementById('progress');
+  const onScroll = () => { const max = document.documentElement.scrollHeight - innerHeight; prog.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`; };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  /* Big name: drifts sideways, follows the scroll direction and speeds up with scroll velocity */
+  const nameRow = document.getElementById('nameRow');
+  if (nameRow && !reduce) {
+    let nx = 0, ndir = -1, vel = 0, lastY = scrollY, nvis = true;
+    new IntersectionObserver(es => nvis = es[0].isIntersecting).observe(nameRow);
+    (function slide() {
+      const y = scrollY, dy = y - lastY; lastY = y;
+      if (dy) ndir = dy > 0 ? -1 : 1; vel += (Math.min(40, Math.abs(dy)) - vel) * 0.1;
+      if (nvis && !document.hidden) { const w = nameRow.firstElementChild.offsetWidth;
+        nx += ndir * (0.05 + vel * 0.012) * (innerWidth / 100); if (nx <= -w) nx += w; if (nx > 0) nx -= w;
+        nameRow.style.transform = `translate3d(${nx}px,0,0)`; }
+      requestAnimationFrame(slide);
+    })();
   }
 
   /* ---------- NDWI tile ---------- */
