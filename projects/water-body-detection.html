@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Water Body Detection | Gyanasai Adusumilli</title>
 <meta name="description" content="Case study: mapping surface water from Sentinel-2 and Landsat-8 imagery, comparing index thresholds, five classical models and a U-Net CNN.">
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Water Body Detection | Gyanasai Adusumilli">
 <meta property="og:description" content="Case study: mapping surface water from Sentinel-2 and Landsat-8 imagery, comparing index thresholds, five classical models and a U-Net CNN.">
@@ -16,8 +16,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <style>
 :root {
-  --bg: #07111A; --panel: #0D1B26; --panel-2: #12242F; --fg: #E7F0F2; --muted: #8A9FA9;
-  --line: #1D3240; --water: #5ED3DF; --land: #D8B26C;
+  --bg: #141517; --panel: #1C1D20; --panel-2: #25262B; --fg: #F4F4F2; --muted: #9C9DA3;
+  --line: #2E2F34; --water: #7584FF; --land: #D9C29A;
   --display: "Unbounded", "Avenir Next", system-ui, sans-serif;
   --body: "Geist", "Segoe UI", system-ui, sans-serif;
   --mono: "Geist Mono", ui-monospace, Menlo, monospace;
@@ -25,13 +25,13 @@
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --bg: #EDF2F3; --panel: #FFFFFF; --panel-2: #E3ECEE; --fg: #0E1E28; --muted: #546A74;
-    --line: #CFDCDF; --water: #08808D; --land: #9C7228; color-scheme: light;
+    --bg: #F4F4F2; --panel: #FFFFFF; --panel-2: #EBEBEE; --fg: #1C1D20; --muted: #5F6168;
+    --line: #DDDDE0; --water: #3F4FE0; --land: #7E6026; color-scheme: light;
   }
 }
 :root[data-theme="light"] {
-  --bg: #EDF2F3; --panel: #FFFFFF; --panel-2: #E3ECEE; --fg: #0E1E28; --muted: #546A74;
-  --line: #CFDCDF; --water: #08808D; --land: #9C7228; color-scheme: light;
+  --bg: #F4F4F2; --panel: #FFFFFF; --panel-2: #EBEBEE; --fg: #1C1D20; --muted: #5F6168;
+  --line: #DDDDE0; --water: #3F4FE0; --land: #7E6026; color-scheme: light;
 }
 * { box-sizing: border-box; }
 img { max-width: 100%; }
