@@ -287,7 +287,7 @@ h2 { font-family: var(--display); font-weight: 800; font-size: clamp(32px, 5vw, 
 .big a { text-decoration: none; background: linear-gradient(90deg, var(--water), var(--land)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .mail { display: inline-flex; align-items: center; gap: 12px; padding: 8px 8px 8px 22px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); font-family: var(--mono); font-size: 16px; flex-wrap: wrap; }
 .mail span { user-select: all; }
-.mail button { border: 0; border-radius: 999px; padding: 10px 18px; background: var(--fg); color: var(--bg); font: 600 14px var(--body); cursor: pointer; }
+.mail button { border: 0; border-radius: 999px; padding: 10px 18px; background: var(--water); color: var(--bg); font: 600 14px var(--body); cursor: pointer; }
 footer { border-top: 1px solid var(--line); padding-block: 28px 44px; color: var(--muted); font-size: 14px; }
 footer .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px 24px; flex-wrap: wrap; }
 /* 60-30-10: navy leads (60%), cream bands carry 30%, coral closes the page (10%).
@@ -306,7 +306,7 @@ footer .wrap { display: flex; justify-content: space-between; align-items: cente
 .botband.inv { border-top: 0; }
 .inv .bot .b-head, .inv .bot .b-torso, .inv .bot .b-arm rect { stroke-opacity: .35; }
 footer.acc { border-top: 0; }
-.acc .big a { background: none; color: var(--fg); }
+.big a { background: none; color: var(--fg); }
 footer a { text-decoration: none; } footer a:hover { color: var(--water); }
 @media (max-width: 640px) { footer .wrap { flex-direction: column; align-items: flex-start; } }
 
@@ -552,7 +552,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--water); }
     </div>
   </section>
 
-  <section id="contact" class="contact acc">
+  <section id="contact" class="contact">
     <div class="wrap">
       <p class="big"><a href="https://www.linkedin.com/in/gyanasai" target="_blank" rel="noopener">Let's build something.</a></p>
       <div class="ctas">
@@ -564,7 +564,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--water); }
   </section>
 </main>
 
-<footer class="acc"><div class="wrap"><span>© 2026 Gyanasai Adusumilli</span><span>Built with curiosity. Grounded in data.</span><a href="#top">Back to top ↑</a></div></footer>
+<footer><div class="wrap"><span>© 2026 Gyanasai Adusumilli</span><span>Built with curiosity. Grounded in data.</span><a href="#top">Back to top ↑</a></div></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
