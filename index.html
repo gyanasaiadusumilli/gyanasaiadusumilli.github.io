@@ -304,7 +304,8 @@ footer .wrap { display: flex; justify-content: space-between; align-items: cente
 .acc { --bg: #FF6B5B; --panel: #FF7E70; --panel-2: #FF8F82; --fg: #14213D; --muted: #2A2A45;
   --line: #E8584A; --water: #14213D; --land: #F4EDE0; --glow: rgba(20, 33, 61, 0.12); }
 .botband.inv { border-top: 0; }
-.inv .bot .b-head, .inv .bot .b-torso, .inv .bot .b-arm rect { stroke-opacity: .35; }
+.inv .bot .b-head, .inv .bot .b-torso, .inv .bot .b-arm rect { fill: var(--fg); stroke: var(--bg); stroke-opacity: .18; }
+.inv .bot .b-visor { fill: #0A1226; stroke: #F4EDE0; stroke-opacity: .22; stroke-width: 3; }
 footer.acc { border-top: 0; }
 .big a { background: none; color: var(--fg); }
 footer a { text-decoration: none; } footer a:hover { color: var(--water); }
