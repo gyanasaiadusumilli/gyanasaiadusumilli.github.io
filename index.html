@@ -281,6 +281,21 @@ h2 { font-family: var(--display); font-weight: 800; font-size: clamp(32px, 5vw, 
 .row .place { font-size: 14px; color: var(--muted); white-space: nowrap; padding-top: 6px; }
 @media (max-width: 760px) { .row { grid-template-columns: 1fr; gap: 6px; } .row .place { padding-top: 0; } }
 
+/* Colour sweeps: each new colour band rises in with a curved top edge (like the greeting curtain), then flattens */
+.has-sweep { position: relative; }
+.sweep { position: absolute; left: 0; right: 0; bottom: calc(100% - 1px); height: clamp(40px, 7vw, 110px); background: var(--bg);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0; transform-origin: 50% 100%; transform: scaleY(0); pointer-events: none; }
+
+/* Journey: a coral line draws down the timeline and lights each step as you scroll */
+.tl { position: relative; --tlx: 216px; }
+.tl-line { position: absolute; top: 0; bottom: 0; left: var(--tlx); width: 2px; background: var(--line); pointer-events: none; }
+.tl-line i { position: absolute; inset: 0; background: var(--water); transform-origin: 50% 0; transform: scaleY(var(--tlp, 1)); }
+.tl .row { position: relative; }
+.tl .row::before { content: ""; position: absolute; left: calc(var(--tlx) - 5px); top: 40px; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--bg); border: 2px solid var(--water); transition: background .3s, box-shadow .3s; z-index: 1; }
+.tl .row.lit::before, .tl.static .row::before { background: var(--water); box-shadow: 0 0 0 6px var(--glow); }
+@media (max-width: 760px) { .tl { --tlx: 5px; } .tl .row { padding-left: 30px; } .tl .row::before { top: 34px; } }
+
 /* Contact */
 .contact { text-align: left; }
 .big { font-family: var(--display); font-weight: 800; font-size: clamp(40px, 9vw, 132px); letter-spacing: -0.045em; line-height: .92; margin: 0 0 40px; }
@@ -503,7 +518,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--water); }
     </div>
   </section>
 
-  <section id="impact" class="inv">
+  <section id="impact" class="inv has-sweep"><div class="sweep" aria-hidden="true"></div>
     <div class="wrap">
       <div class="head"><h2>Impact</h2><p>Numbers from my internship at OYO and my graduate work.</p></div>
       <div class="stats">
@@ -517,7 +532,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--water); }
   <section id="journey" class="inv" style="padding-top:0">
     <div class="wrap">
       <div class="head"><h2>Journey</h2><p>My education and work experience so far.</p></div>
-      <div class="tl">
+      <div class="tl static"><div class="tl-line" aria-hidden="true"><i></i></div>
         <div class="row">
           <div class="when">Jan 2025 to Dec 2026</div>
           <div>
@@ -553,7 +568,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--water); }
     </div>
   </section>
 
-  <section id="contact" class="contact">
+  <section id="contact" class="contact has-sweep"><div class="sweep" aria-hidden="true"></div>
     <div class="wrap">
       <p class="big"><a href="https://www.linkedin.com/in/gyanasai" target="_blank" rel="noopener">Let's build something.</a></p>
       <div class="ctas">
@@ -675,6 +690,19 @@ footer a { text-decoration: none; } footer a:hover { color: var(--water); }
       ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: () =>
         gsap.to(o, { v: end, duration: 1.6, ease: 'power3.out', onUpdate: () => el.textContent = o.v.toFixed(dec) + suf }) });
     });
+
+    /* Colour sweeps */
+    document.querySelectorAll('.sweep').forEach(el => gsap.fromTo(el, { scaleY: 1 }, { scaleY: 0, ease: 'none',
+      scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'top 35%', scrub: 0.4 } }));
+    /* Journey line */
+    const tl = document.querySelector('.tl');
+    if (tl) {
+      tl.classList.remove('static');
+      const line = tl.querySelector('.tl-line i');
+      gsap.fromTo(line, { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: tl, start: 'top 65%', end: 'bottom 65%', scrub: 0.4 } });
+      tl.querySelectorAll('.row').forEach(row => ScrollTrigger.create({ trigger: row, start: 'top+=46 65%',
+        onEnter: () => row.classList.add('lit'), onLeaveBack: () => row.classList.remove('lit') }));
+    }
   }
 
   /* Hero background: my name in binary (8-bit ASCII), dripping down one digit at a time onto the big name.
